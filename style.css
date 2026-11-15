@@ -1,0 +1,193 @@
+/* ============================================================
+   style.css – Dark wine theme (matches the red dots), clean glass UI, red-dot canvas
+   Sections: 1 Colours | 2 Background | 3 Basics | 4 Forms/buttons
+   5 Login | 6 Layout | 7 Dashboard | 8 Table | 9 Modal/toast
+   10 Animations | 11 Mobile | 12 Finishing touches
+   ============================================================ */
+
+/* ---- 1. COLOURS (change the look here only) ---- */
+:root{
+  --bg:#1a0a10; --text:#fff4f5; --muted:#c9a9b0;
+  --glass:rgba(255,255,255,.06); --line:rgba(255,255,255,.14);
+  --main:#ffffff; --main2:#ffe6e9;     /* main button / heading colour */
+  --on-main:#3a0510;                   /* text colour on top of the main colour */
+  --hi:#ff3b55; --hi2:#ff9aa8;         /* highlight colour (same red family as the dots) */
+  --danger:#ff8095; --ok:#5ff0b0; --warn:#ffd36b;
+  --shadow:0 18px 50px rgba(0,0,0,.55); --r:22px;
+  /* deep black-wine background with a soft red glow in the corner */
+  --page:radial-gradient(80% 60% at 90% 105%,rgba(190,20,50,.35) 0%,transparent 65%),linear-gradient(160deg,#060203 0%,#14070b 55%,#240a12 100%);
+}
+:root[data-theme=light]{
+  --bg:#fff4f5; --text:#2a0a10; --muted:#86545c;
+  --glass:rgba(255,255,255,.7); --line:rgba(120,20,40,.16);
+  --main:#c4122f; --main2:#e63950; --on-main:#fff;
+  --hi:#e0203f; --hi2:#ff8fa3;
+  --danger:#d6203a; --ok:#0a9d63; --warn:#b57600;
+  --shadow:0 16px 40px rgba(120,20,40,.18);
+  --page:linear-gradient(150deg,#fff7f7,#ffe3e6 60%,#ffcdd4);
+}
+
+/* ---- 2. BACKGROUND + red dots canvas ---- */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;letter-spacing:-.01em;color:var(--text);min-height:100vh;min-height:100dvh;background:var(--page) fixed;overflow-x:hidden}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:90;pointer-events:none} /* above everything so dots never hide */
+
+/* ---- 3. BASICS ---- */
+.hidden{display:none!important}.muted{color:var(--muted)}.center{text-align:center}.spacer{flex:1}
+.glass{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+
+/* ---- 4. FORMS + BUTTONS ---- */
+input,select{width:100%;padding:12px 14px;margin-top:6px;border-radius:12px;border:1px solid var(--line);background:rgba(120,170,230,.1);color:var(--text);font:inherit;transition:border .25s,box-shadow .25s,transform .25s}
+select option{color:#111}
+input:focus,select:focus{outline:0;border-color:var(--hi);box-shadow:0 0 0 4px rgba(255,77,109,.22);transform:translateY(-1px)}
+label{display:block;font-size:.85rem;margin-bottom:14px;color:var(--muted)}
+.check{display:flex;gap:8px;align-items:center}.check input{width:auto;margin:0}
+.pw{position:relative;display:block}.pw input{padding-right:46px}
+.eye{position:absolute;right:4px;top:6px;width:40px;height:40px;background:none;border:0;cursor:pointer;font-size:1rem;opacity:.7;transition:transform .2s}.eye:hover{transform:scale(1.2)}
+.btn{position:relative;overflow:hidden;border:0;border-radius:12px;padding:12px 18px;font:600 .9rem 'Plus Jakarta Sans';cursor:pointer;color:var(--text);transition:transform .2s,box-shadow .25s}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,var(--main2),var(--main));color:var(--on-main);box-shadow:0 8px 22px rgba(255,255,255,.35)}
+.btn.primary:hover{box-shadow:0 12px 28px rgba(255,255,255,.5)}
+.btn.ghost{background:transparent;border:1px solid var(--line)}.btn.ghost:hover{border-color:var(--hi)}
+.btn.danger{background:var(--danger);color:#fff}
+form .btn.primary{width:100%}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:ripple .6s ease-out;pointer-events:none}
+.error{color:var(--danger);font-size:.82rem;min-height:1.2em;margin:0 0 10px}
+.hint{font-size:.75rem;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6}
+.icon-btn{background:var(--glass);border:1px solid var(--line);color:var(--text);border-radius:12px;width:42px;height:42px;cursor:pointer;transition:transform .25s}.icon-btn:hover{transform:rotate(15deg) scale(1.08)}
+.link{background:none;border:0;color:var(--hi2);cursor:pointer;font:500 .85rem 'Plus Jakarta Sans';padding:8px 0}.link:disabled{color:var(--muted);cursor:default}
+.row-links{display:flex;justify-content:space-between;margin-top:8px}
+
+/* ---- 5. LOGIN SCREEN ---- */
+#auth{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:20px}
+.auth-card{width:min(430px,100%);padding:34px;animation:pop .7s cubic-bezier(.2,.9,.3,1.2) both}
+.auth-card h1{margin:0;font-size:1.9rem;display:flex;align-items:center;gap:10px}
+.auth-card h1::before{content:"";width:14px;height:14px;border-radius:50%;background:#ff2d4a;box-shadow:0 0 14px #ff2d4a;animation:pulse 2s ease-in-out infinite}
+.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;margin:20px 0;background:rgba(0,0,0,.18);padding:5px;border-radius:999px}
+.pill{position:absolute;top:5px;bottom:5px;left:5px;width:calc(50% - 5px);border-radius:999px;background:linear-gradient(135deg,var(--main2),var(--main));box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .5s cubic-bezier(.3,1.35,.5,1)}
+.tabs[data-on=signup] .pill{transform:translateX(100%)} /* the white pill slides to Sign up */
+.tab{position:relative;z-index:1;border:0;background:none;color:var(--muted);padding:10px;border-radius:999px;cursor:pointer;font:600 .85rem 'Plus Jakarta Sans';transition:color .4s}
+.tab.active{color:var(--on-main)}
+/* when a form is shown, its fields glide in one by one (JS sets --dx direction and --k order) */
+form.swap>*{animation:fieldIn .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--k,0) * 55ms)}
+.auth-card.morph{animation:morph .6s ease}
+#otpForm input[name=otp]{text-align:center;font-size:1.5rem;letter-spacing:12px}
+
+/* ---- 6. LAYOUT: sidebar + top bar ---- */
+#app{display:flex;min-height:100vh;min-height:100dvh}
+#sidebar{width:236px;margin:14px;padding:20px 14px;display:flex;flex-direction:column;gap:8px;position:sticky;top:14px;height:calc(100dvh - 28px);transition:width .35s,transform .35s;z-index:40}
+.brand{font-weight:700;font-size:1.3rem;padding:6px 10px 18px;color:var(--main2)}
+nav{flex:1;display:flex;flex-direction:column;gap:6px}
+nav a{padding:12px;border-radius:12px;color:var(--muted);text-decoration:none;display:flex;gap:10px;border-left:3px solid transparent;transition:.25s}
+nav a:hover{transform:translateX(5px);color:var(--text)}
+nav a.active{background:rgba(255,77,109,.16);color:var(--text);border-left-color:var(--main)}
+#sidebar.collapsed{width:74px}#sidebar.collapsed span,#sidebar.collapsed .brand{display:none}
+#scrim{position:fixed;inset:0;background:rgba(8,2,4,.6);opacity:0;pointer-events:none;transition:opacity .3s;z-index:30}
+#scrim.show{opacity:1;pointer-events:auto}
+.main{flex:1;padding:14px 14px 14px 0;min-width:0}
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;animation:drop .6s both}
+.topbar h2{margin:0 8px;font-size:1.1rem}
+.user{display:flex;gap:10px;align-items:center}.user small{display:block;color:var(--muted);text-transform:capitalize;font-size:.72rem}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--hi),var(--hi2));color:#fff;font-weight:700}
+main{padding-top:14px}
+.view.enter{animation:fade .5s ease both}
+
+/* ---- 7. DASHBOARD ---- */
+.quick{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:14px}
+.card{padding:20px;border-radius:var(--r);border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(18px);transition:transform .3s,border-color .3s,box-shadow .3s}
+.card:hover{transform:translateY(-6px);border-color:var(--hi);box-shadow:0 16px 36px rgba(255,77,109,.2)}
+.card b{font-size:1.9rem;display:block}.card span{color:var(--muted);font-size:.85rem}
+.card i{font-style:normal;font-size:1.5rem;float:right;animation:float 3.5s ease-in-out infinite}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px}
+.panel{padding:20px}.panels .panel{margin:0}.panel h3{margin:0 0 14px;font-size:1rem}
+.bar{display:grid;grid-template-columns:120px 1fr 28px;gap:10px;align-items:center;margin-bottom:10px;font-size:.85rem}
+.bar i{display:block;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--hi),var(--hi2));transform-origin:left;animation:grow 1s cubic-bezier(.2,.8,.2,1) .3s both}
+.recent-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem}.recent-row:last-child{border:0}
+.donut-box{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.donut{width:130px;height:130px;border-radius:50%;position:relative;animation:sweep 1.2s ease both}
+.donut::after{content:"";position:absolute;inset:24px;border-radius:50%;background:var(--bg)}
+.legend div{display:flex;align-items:center;gap:8px;font-size:.85rem;margin-bottom:6px}.legend i{width:11px;height:11px;border-radius:3px}
+.feed-row{padding:9px 0;border-bottom:1px solid var(--line);font-size:.85rem}.feed-row small{display:block;color:var(--muted)}
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:14px}
+.dept-card{padding:20px;cursor:pointer;transition:transform .3s,border-color .3s}.dept-card:hover{transform:translateY(-6px) scale(1.02);border-color:var(--main)}
+.dept-card h3{margin:0 0 10px;color:var(--main2)}.dept-card p{margin:4px 0;font-size:.85rem;color:var(--muted)}.dept-card b{color:var(--text)}
+
+/* ---- 8. EMPLOYEE TABLE ---- */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{margin:0;flex:1 1 160px;width:auto}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:13px 16px;text-align:left;font-size:.86rem;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:500}
+tbody tr{transition:background .25s,transform .25s}tbody tr:hover{background:rgba(255,77,109,.1)}
+.badge{padding:3px 11px;border-radius:20px;font-size:.74rem;font-weight:600;white-space:nowrap}
+.Active{background:rgba(61,220,151,.18);color:var(--ok)}.Inactive{background:rgba(255,123,138,.18);color:var(--danger)}.OnLeave{background:rgba(255,198,92,.18);color:var(--warn)}
+.acts{display:flex;gap:6px;justify-content:flex-end}.acts button{background:none;border:1px solid var(--line);color:var(--text);border-radius:10px;min-width:38px;height:38px;cursor:pointer;transition:.2s}.acts button:hover{border-color:var(--hi);transform:scale(1.12)}
+
+/* ---- 9. MODAL + TOAST ---- */
+.modal{position:fixed;inset:0;background:rgba(8,2,4,.65);backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px;z-index:50;overflow:auto;animation:fade .25s both}
+.modal-card{width:min(580px,100%);padding:26px;background:var(--bg);animation:pop .4s cubic-bezier(.2,.9,.3,1.2) both}
+.modal-card h3{margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.profile dl{display:grid;grid-template-columns:120px 1fr;gap:10px;margin:0}.profile dt{color:var(--muted)}.profile dd{margin:0}
+#toast{position:fixed;bottom:22px;right:22px;left:auto;background:linear-gradient(135deg,var(--main2),var(--main));color:var(--on-main);padding:12px 18px;border-radius:12px;font-weight:600;transform:translateY(90px);opacity:0;transition:.4s cubic-bezier(.2,.9,.3,1.2);z-index:99}
+#toast.show{transform:none;opacity:1}
+
+/* ---- 10. ANIMATIONS ---- */
+@keyframes flow{to{background-position-x:1200px}}
+@keyframes pop{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:none}}
+@keyframes slide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes drop{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes float{50%{transform:translateY(-5px)}}
+@keyframes sweep{from{opacity:0;transform:rotate(-120deg) scale(.6)}to{opacity:1;transform:none}}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.shake{animation:shake .4s}
+/* JS sets --i (0,1,2...) on these so they appear one after another */
+.card,.panel,.dept-card,tbody tr,.quick{animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 60ms)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+@keyframes fieldIn{from{opacity:0;transform:translateX(var(--dx,30px)) scale(.97);filter:blur(5px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes morph{40%{transform:scale(1.025) rotate(.4deg)}to{transform:none}}
+@keyframes pulse{50%{transform:scale(1.35);box-shadow:0 0 22px #ff2d4a}}
+
+/* ---- 11. MOBILE / TABLET ---- */
+@media(max-width:800px){
+  #sidebar{position:fixed;left:0;top:0;margin:0;height:100dvh;border-radius:0 var(--r) var(--r) 0;transform:translateX(-110%);width:250px;background:var(--bg)}
+  #sidebar.open{transform:none}#sidebar.collapsed{width:250px}#sidebar.collapsed span,#sidebar.collapsed .brand{display:revert}
+  .main{padding:10px;padding-bottom:max(10px,env(safe-area-inset-bottom))}
+  .user div{display:none}.topbar{padding:8px 12px}
+  input,select{font-size:16px} /* stops iPhone zoom on focus */
+  .grid2{grid-template-columns:1fr}
+  .modal{place-items:end center;padding:0}.modal-card{border-radius:22px 22px 0 0;max-height:92dvh;overflow:auto;padding-bottom:max(26px,env(safe-area-inset-bottom))}
+  .modal-actions .btn{flex:1}
+  .cards{grid-template-columns:repeat(2,1fr);gap:10px}.card{padding:14px}.card b{font-size:1.4rem}
+  .auth-card{padding:24px}
+  .toolbar .btn{flex:1 1 45%}
+}
+@media(max-width:640px){
+  /* table turns into stacked cards on phones */
+  .table-wrap{background:none;border:0;box-shadow:none;backdrop-filter:none}
+  thead{display:none}table,tbody{display:block}
+  tbody tr{display:block;margin-bottom:12px;padding:8px 14px;border-radius:var(--r);border:1px solid var(--line);background:var(--glass)}
+  td{display:flex;justify-content:space-between;gap:14px;border:0;padding:8px 0;text-align:right}
+  td::before{content:attr(data-label);color:var(--muted);text-align:left}
+  td:last-child{border-top:1px solid var(--line);margin-top:4px}td:last-child::before{display:none}
+  .bar{grid-template-columns:90px 1fr 24px}
+  .profile dl{grid-template-columns:100px 1fr}
+  #toast{left:16px;right:16px;text-align:center}
+}
+
+/* ---- 12. FINISHING TOUCHES (soft, rounded, calm) ---- */
+.btn{border-radius:999px}
+.glass{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),var(--shadow)}
+nav a{border-left:0}nav a.active{background:rgba(255,255,255,.16)}
+.topbar h2{font-size:1.4rem;font-weight:800;letter-spacing:-.03em}
+.panel h3{font-weight:700}
+.dash-filter{width:auto;margin:0;border-radius:999px;padding:11px 18px}
+.quick{align-items:center}
+@media print{#fx,#sidebar,.topbar,.quick{display:none!important}body{background:#fff;color:#000}}

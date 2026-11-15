@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14070b">
+<title>EMPLOYESS DETAILS – Employee Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div id="scrim"></div>
+
+<!-- ===== AUTH ===== -->
+<section id="auth" class="hidden">
+  <div class="glass auth-card">
+    <h1>EMPLOYESS DETAILS</h1>
+    <p class="muted" id="authSub">Sign in to manage your team</p>
+    <div class="tabs" data-on="login"><span class="pill"></span><button class="tab active" data-tab="login">Log in</button><button class="tab" data-tab="signup">Sign up</button></div>
+
+    <form id="loginForm" novalidate>
+      <label>Email<input type="email" name="email" placeholder="you@company.com" autocomplete="username"></label>
+      <label>Password<span class="pw"><input type="password" name="password" autocomplete="current-password"><button type="button" class="eye" aria-label="Show password">👁</button></span></label>
+      <div class="row"><label class="check"><input type="checkbox" name="remember"> Remember me</label></div>
+      <p class="error" id="loginErr"></p>
+      <button class="btn primary" type="submit">Log in</button>
+      <p class="hint">After your password, a 6-digit OTP is emailed to your Gmail.<br>Admin login is set in <b>config.js</b>. New staff can use Sign up.</p>
+    </form>
+
+    <form id="otpForm" class="hidden" novalidate>
+      <p class="muted" id="otpInfo"></p>
+      <label>Enter 6-digit OTP<input name="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"></label>
+      <p class="error" id="otpErr"></p>
+      <button class="btn primary" type="submit">Verify and log in</button>
+      <div class="row-links"><button type="button" class="link" id="resendBtn">Resend OTP</button><button type="button" class="link" id="otpBack">Back to login</button></div>
+    </form>
+
+    <form id="signupForm" class="hidden" novalidate>
+      <label>Full name<input name="name" placeholder="Jane Doe"></label>
+      <label>Email<input type="email" name="email" placeholder="you@company.com"></label>
+      <label>Role
+        <select name="role"><option value="employee">Employee</option><option value="hr">HR</option><option value="admin">Admin</option></select>
+      </label>
+      <label>Password<span class="pw"><input type="password" name="password" placeholder="8+ chars, a letter and a number" autocomplete="new-password"><button type="button" class="eye" aria-label="Show password">👁</button></span></label>
+      <label>Confirm password<input type="password" name="confirm" autocomplete="new-password"></label>
+      <p class="error" id="signupErr"></p>
+      <button class="btn primary" type="submit">Create account</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== APP ===== -->
+<div id="app" class="hidden">
+  <aside id="sidebar" class="glass">
+    <div class="brand">EMPLOYESS DETAILS</div>
+    <nav>
+      <a href="#/dashboard" data-route="dashboard">📊 <span>Dashboard</span></a>
+      <a href="#/employees" data-route="employees">👥 <span>Employees</span></a>
+      <a href="#/departments" data-route="departments">🏢 <span>Departments</span></a>
+      <a href="#/logins" data-route="logins" id="navLogins">🔐 <span>Login history</span></a>
+    </nav>
+    <button class="btn ghost" id="logoutBtn">⏻ <span>Log out</span></button>
+  </aside>
+  <div class="main">
+    <header class="glass topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Toggle sidebar">☰</button>
+      <h2 id="pageTitle">Dashboard</h2>
+      <div class="spacer"></div>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">🌓</button>
+      <div class="user"><span class="avatar" id="userAvatar"></span><div><b id="userName"></b><small id="userRole"></small></div></div>
+    </header>
+
+    <main>
+      <section id="view-dashboard" class="view"><div id="dashboard"></div></section>
+
+      <section id="view-departments" class="view hidden"><div class="dept-grid" id="deptGrid"></div></section>
+
+      <section id="view-logins" class="view hidden">
+        <div class="toolbar">
+          <input id="lsearch" type="search" placeholder="Search name or email">
+          <select id="levent"><option value="">All events</option><option>Logged in</option><option>Logged out</option><option>Wrong password</option><option>Wrong OTP</option></select>
+          <button class="btn ghost" id="lexport">⬇ Export CSV</button>
+          <button class="btn ghost" id="lclear">🗑 Clear history</button>
+        </div>
+        <div class="glass table-wrap"><table>
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Event</th><th>Date and time</th><th>Device</th></tr></thead>
+          <tbody id="lbody"></tbody>
+        </table></div>
+        <p class="muted center hidden" id="lempty">No login records yet. They appear here after someone logs in.</p>
+      </section>
+
+      <section id="view-employees" class="view hidden">
+        <div class="toolbar">
+          <input id="search" type="search" placeholder="Search name, email or ID">
+          <select id="fDept"></select>
+          <select id="fStatus"><option value="">All statuses</option><option>Active</option><option>Inactive</option><option>On Leave</option></select>
+          <button class="btn ghost" id="exportBtn">⬇ Export CSV</button>
+          <button class="btn primary" id="addBtn">+ Add employee</button>
+        </div>
+        <div class="glass table-wrap"><table>
+          <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Designation</th><th>Salary</th><th>Status</th><th></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table></div>
+        <p class="muted center hidden" id="empty">No employees match your filters. Clear the search to see everyone.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div id="modal" class="modal hidden"><div class="glass modal-card" id="modalBody"></div></div>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
+<!-- Our code, loaded in this order: settings -> data -> login -> pages -->
+<script src="fx.js"></script>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
